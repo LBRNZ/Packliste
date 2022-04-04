@@ -90,6 +90,18 @@
                     Navigation="{Binding ElementName=RootNavigation}" />
                 <Frame x:Name="RootFrame" Grid.Row="1" Margin="-80,20,0,0" />
             </Grid>
+            <wpfui:Snackbar
+                x:Name="RootSnackbar"
+                Title=""
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1"
+                MaxWidth="600"
+                Icon="PuzzlePiece24"
+                Message=""
+                Show="False"
+                ShowCloseButton="True"
+                Timeout="8000" />
 
         </Grid>
         <wpfui:TitleBar

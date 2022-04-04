@@ -155,5 +155,25 @@ namespace Packliste.Data
             }
             writer.WriteEndElement();
         }
+
+        public void RemoveCategory(Category category)
+        {
+            if (Items.Any(x => x.Category == category))
+            {
+                string items = string.Join(", ", Items.Where(x => x.Category == category).Select(i => i.Name)); 
+                throw new InvalidOperationException("Die Kategorie wird noch von folgenden Gegenständen genutzt: " + items);
+            }
+            Categories.Remove(category);
+        }
+
+        public void RemoveItem(Item item)
+        {
+            if (Journeys.Any(x => x.Travelers.Any(t => t.itemSets.Any(i => i.Item ==item))))
+            {
+                string journeys = string.Join(", ", Journeys.Where(x => x.Travelers.Any(t => t.itemSets.Any(i => i.Item == item))).Select(j => j.Destination));
+                throw new InvalidOperationException("Der Gegenstand wird noch von folgenden Reisen genutzt: " + journeys);
+            }
+            Items.Remove(item);
+        }
     }
 }

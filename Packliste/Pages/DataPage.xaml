@@ -36,7 +36,8 @@
                         <DataGrid x:Name="Items_dg"
                               AutoGenerateColumns="False"
                               ItemsSource="{Binding ItemsView, UpdateSourceTrigger=PropertyChanged}"
-                              AddingNewItem="Items_dg_AddingNewItem">
+                              AddingNewItem="Items_dg_AddingNewItem"
+                              PreviewKeyDown="Items_dg_PreviewKeyDown">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Bezeichnung" Binding="{Binding Path=Name}"/>
                                 <DataGridTextColumn Header="Gewicht [g]" Binding="{Binding Path=Weight, StringFormat={}{0:N0}, ConverterCulture=de-DE}"/>

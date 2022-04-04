@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPFUI.Controls;
 
 namespace Packliste.Pages
 {
@@ -101,7 +102,45 @@ namespace Packliste.Pages
 
         private void RemoveCategory_Click(object sender, RoutedEventArgs e)
         {
-            Data.Categories.Remove(SelectedCategory);
+            try
+            {
+                Data.RemoveCategory(SelectedCategory);
+            }
+            catch (Exception ex)
+            {
+                Snackbar rootSnackbar = (((MainWindow)Application.Current.MainWindow)!).RootSnackbar;
+                rootSnackbar.Message = ex.Message;
+                rootSnackbar.Title = "Fehler";
+                rootSnackbar.Icon = WPFUI.Common.Icon.ErrorCircle24;
+
+                rootSnackbar.Expand();
+            }
+           
+        }
+
+        private void Items_dg_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            var grid = (DataGrid)sender;
+            if (Key.Delete == e.Key)
+            {
+                try
+                {
+                    Data.RemoveItem(grid.Items[grid.SelectedIndex] as Item);
+                }
+                catch (Exception ex)
+                {
+
+                    Snackbar rootSnackbar = (((MainWindow)Application.Current.MainWindow)!).RootSnackbar;
+                    rootSnackbar.Message = ex.Message;
+                    rootSnackbar.Title = "Fehler";
+                    rootSnackbar.Icon = WPFUI.Common.Icon.ErrorCircle24;
+
+                    rootSnackbar.Expand();
+                } finally
+                {
+                    e.Handled = true;
+                }
+            }
         }
     }
 }
