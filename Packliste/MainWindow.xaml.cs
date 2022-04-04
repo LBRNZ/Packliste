@@ -21,13 +21,14 @@ namespace Packliste
     /// </summary>
     public partial class MainWindow : Window
     {
+        public XmlData data { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             var testData = CreateSampleData();
             //testData.Save();
 
-            var readingtest = new XmlData().Load();
+            data = new XmlData().Load();
         }
 
         public XmlData CreateSampleData()

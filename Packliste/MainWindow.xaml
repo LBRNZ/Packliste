@@ -3,10 +3,97 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
+        xmlns:pages="clr-namespace:Packliste.Pages"
         xmlns:local="clr-namespace:Packliste"
+        Style="{StaticResource UiWindow}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Packliste" Height="550" Width="900">
     <Grid>
+        <!--  The first division of the grid divides the application into the top bar (TitleBar) and the content itself  -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <Grid
+            x:Name="RootGrid"
+            Grid.Row="1"
+            Margin="12,6,0,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Profile card displays the app's icon, name, and subtitle  -->
+            <Grid Grid.Row="0" Margin="6,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.Column="0"
+                    Width="34"
+                    Height="54">
+                    <Border.Background>
+                        <ImageBrush ImageSource="pack://application:,,,/Assets/Backpack.png" />
+                    </Border.Background>
+                </Border>
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="12,0,0,0"
+                    VerticalAlignment="Center">
+                    <TextBlock FontWeight="Medium" Text="Packliste" />
+                    <TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="Tourenverwaltung" />
+                </StackPanel>
+            </Grid>
+
+            <!--  This element displays the navigation items  -->
+            <wpfui:NavigationStore
+                x:Name="RootNavigation"
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,0,12,0"
+                Frame="{Binding ElementName=RootFrame}">
+                <wpfui:NavigationStore.Items>
+                    <wpfui:NavigationItem
+                    Content="Dashboard"
+                    Icon="Home24"
+                    Tag="dashboard"
+                    Type="{x:Type pages:Dashboard}" />
+                    <wpfui:NavigationItem
+                    Content="Daten"
+                    Icon="Library24"
+                    Tag="data"
+                    Type="{x:Type pages:DataPage}"/>
+                </wpfui:NavigationStore.Items>
+            </wpfui:NavigationStore>
+
+            <!--  Pages are presented here  -->
+            <Grid
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <wpfui:Breadcrumb
+                    Grid.Row="0"
+                    Margin="30,5,0,18"
+                    Navigation="{Binding ElementName=RootNavigation}" />
+                <Frame x:Name="RootFrame" Grid.Row="1" Margin="-80,20,0,0" />
+            </Grid>
+
+        </Grid>
+        <wpfui:TitleBar
+            UseSnapLayout="True"
+            ApplicationNavigation="True"
+            Grid.Row="0"/>
     </Grid>
 </Window>
