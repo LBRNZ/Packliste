@@ -15,6 +15,7 @@ namespace Packliste.Data
     {
        
         public ObservableCollection<Person> Persons { get; set; }
+        public ObservableCollection<Category> Categories { get; set; }
         public ObservableCollection<Item> Items { get; set; }
         public ObservableCollection<Journey> Journeys { get; set; }
         private static XmlSerializer serializer = new XmlSerializer(typeof(XmlData));
@@ -22,6 +23,7 @@ namespace Packliste.Data
         public XmlData()
         {
             Persons = new ObservableCollection<Person>();
+            Categories = new ObservableCollection<Category>();
             Items = new ObservableCollection<Item>();
             Journeys = new ObservableCollection<Journey>();
         }
@@ -69,6 +71,22 @@ namespace Packliste.Data
             }
             reader.ReadEndElement();
 
+            childSerializer = new XmlSerializer(typeof(Category));
+            if (reader.Name == "Categories" && reader.IsStartElement())
+            {
+                using (var innerReader = reader.ReadSubtree())
+                {
+                    innerReader.ReadToFollowing("Category");
+                    do
+                    {
+                        Category category = (Category)childSerializer.Deserialize(innerReader);
+                        category.SetXmlData(this);
+                        Categories.Add(category);
+                    } while (innerReader.Depth > 0);
+                }
+            }
+            reader.ReadEndElement();
+
             childSerializer = new XmlSerializer(typeof(Item));
             if (reader.Name == "Items" && reader.IsStartElement())
             {
@@ -77,10 +95,10 @@ namespace Packliste.Data
                     innerReader.ReadToFollowing("Item");
                     do
                     {
-                        Item item = (Item)childSerializer.Deserialize(innerReader);
-                        item.SetXmlData(this);
+                        Item item = new Item(this);
+                        item.ReadXml(innerReader);
                         Items.Add(item);
-                    } while (innerReader.Depth > 0);
+                    } while (innerReader.ReadToNextSibling("Item"));
                 }
             }
             reader.ReadEndElement();
@@ -93,7 +111,6 @@ namespace Packliste.Data
                     do
                     {
                         Journey journey = new Journey(this);
-                        journey.SetXmlData(this);
                         journey.ReadXml(innerReader);
                         Journeys.Add(journey);
                     } while (innerReader.ReadToNextSibling("Journey"));
@@ -109,6 +126,14 @@ namespace Packliste.Data
             writer.WriteStartElement("Persons");
             XmlSerializer childSerializer = new XmlSerializer(typeof(Person));
             foreach (Person child in Persons)
+            {
+                childSerializer.Serialize(writer, child, ns);
+            }
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("Categories");
+            childSerializer = new XmlSerializer(typeof(Category));
+            foreach (Category child in Categories)
             {
                 childSerializer.Serialize(writer, child, ns);
             }

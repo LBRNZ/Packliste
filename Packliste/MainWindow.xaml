@@ -8,7 +8,8 @@
         xmlns:local="clr-namespace:Packliste"
         Style="{StaticResource UiWindow}"
         mc:Ignorable="d"
-        Title="Packliste" Height="550" Width="900">
+        Title="Packliste" Height="550" Width="900"
+        Closing="Window_Closing">
     <Grid>
         <!--  The first division of the grid divides the application into the top bar (TitleBar) and the content itself  -->
         <Grid.RowDefinitions>

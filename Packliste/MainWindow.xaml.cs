@@ -25,7 +25,7 @@ namespace Packliste
         public MainWindow()
         {
             InitializeComponent();
-            var testData = CreateSampleData();
+            //var testData = CreateSampleData();
             //testData.Save();
 
             data = new XmlData().Load();
@@ -55,6 +55,11 @@ namespace Packliste
             data.Items.Add(item);
 
             return data;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            data.Save();
         }
     }
 }
