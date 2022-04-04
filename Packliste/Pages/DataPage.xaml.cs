@@ -74,6 +74,7 @@ namespace Packliste.Pages
             set
             {
                 _selectedCategory = value;
+                NotifyPropertyChanged();
                 RefreshItemsView();
             }
         }
@@ -89,6 +90,18 @@ namespace Packliste.Pages
             {
                 Category = SelectedCategory
             };
+        }
+
+        private void AddCategory_Click(object sender, RoutedEventArgs e)
+        {
+            var category = new Category();
+            Data.Categories.Add(category);
+            SelectedCategory = category;
+        }
+
+        private void RemoveCategory_Click(object sender, RoutedEventArgs e)
+        {
+            Data.Categories.Remove(SelectedCategory);
         }
     }
 }
