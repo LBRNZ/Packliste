@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Packliste.Data;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,15 +22,73 @@ namespace Packliste.Pages
     /// <summary>
     /// Interaktionslogik für DataPage.xaml
     /// </summary>
-    public partial class DataPage : Page
+    public partial class DataPage : Page, INotifyPropertyChanged
     {
+        private Category _selectedCategory;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private ICollectionView _ItemsView;
+
+        public ICollectionView ItemsView
+        {
+            get { return _ItemsView; }
+            set
+            {
+                _ItemsView = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
+        private XmlData _Data;
+
+        public XmlData Data
+        {
+            get { return _Data; }
+            set {
+                _Data = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public DataPage()
         {
+            Data = (Application.Current.MainWindow as MainWindow).data;
             InitializeComponent();
-            var data = (Application.Current.MainWindow as MainWindow).data;
-            Items_dg.ItemsSource = data.Items;
-            Persons_dg.ItemsSource = data.Persons;
-            Journeys_dg.ItemsSource = data.Journeys;
+            
+        }
+
+        private void RefreshItemsView()
+        {
+            ItemsView = new CollectionViewSource { Source = Data.Items }.View;
+            ItemsView.Filter = item => SelectedCategory == null || SelectedCategory == ((Item)item).Category;
+        }
+
+        public Category SelectedCategory
+        {
+            get
+            {
+                return _selectedCategory;
+            }
+            set
+            {
+                _selectedCategory = value;
+                RefreshItemsView();
+            }
+        }
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Items_dg_AddingNewItem(object sender, AddingNewItemEventArgs e)
+        {
+            e.NewItem = new Item(Data)
+            {
+                Category = SelectedCategory
+            };
         }
     }
 }

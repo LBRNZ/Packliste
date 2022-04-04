@@ -8,21 +8,40 @@
       mc:Ignorable="d" 
       Style="{StaticResource UiPageScrollable}"
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="DataPage">
+      Title="DataPage" x:Name="_this">
 
     <Grid Margin="0,0,18,18">
-        <StackPanel>
+        <StackPanel DataContext="{Binding ElementName=_this}">
             <wpfui:CardExpander
                 Margin="0,0,0,8"
                 Header="Gegenstände"
                 Icon="AppsAddIn24"
                 IsExpanded="True">
-                <DataGrid x:Name="Items_dg" AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Bezeichnung" Binding="{Binding Path=Name}"/>
-                        <DataGridTextColumn Header="Gewicht [g]" Binding="{Binding Path=Weight, StringFormat={}{0:N0}, ConverterCulture=de-DE}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <DockPanel>
+                    <ListBox x:Name="Categories_lb"
+                             Width="200"
+                             DockPanel.Dock="Left"
+                             Margin="0,0,10,0"
+                             ItemsSource="{Binding Data.Categories, UpdateSourceTrigger=PropertyChanged}"
+                             SelectedItem="{Binding SelectedCategory}"
+                             SelectedIndex="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <DataGrid x:Name="Items_dg"
+                              AutoGenerateColumns="False"
+                              ItemsSource="{Binding ItemsView, UpdateSourceTrigger=PropertyChanged}"
+                              AddingNewItem="Items_dg_AddingNewItem">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Bezeichnung" Binding="{Binding Path=Name}"/>
+                            <DataGridTextColumn Header="Gewicht [g]" Binding="{Binding Path=Weight, StringFormat={}{0:N0}, ConverterCulture=de-DE}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>   
+                </DockPanel>
+
             </wpfui:CardExpander>
 
             <wpfui:CardExpander
@@ -30,9 +49,11 @@
                 Header="Personen"
                 Icon="Person24"
                 IsExpanded="False">
-                <DataGrid x:Name="Persons_dg" AutoGenerateColumns="False">
+                <DataGrid x:Name="Persons_dg"
+                          AutoGenerateColumns="False"
+                          ItemsSource="{Binding Data.Persons, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </wpfui:CardExpander>
@@ -42,11 +63,13 @@
                 Header="Reisen"
                 Icon="Map24"
                 IsExpanded="False">
-                <DataGrid x:Name="Journeys_dg" AutoGenerateColumns="False">
+                <DataGrid x:Name="Journeys_dg"
+                          AutoGenerateColumns="False"
+                          ItemsSource="{Binding Data.Journeys, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Ziel" Binding="{Binding Path=Destination}"/>
-                        <DataGridTextColumn Header="Startdatum" Binding="{Binding Path=StartDate}"/>
-                        <DataGridTextColumn Header="Enddatum" Binding="{Binding Path=EndDate}"/>
+                        <DataGridTextColumn Header="Ziel" Binding="{Binding Destination}"/>
+                        <DataGridTextColumn Header="Startdatum" Binding="{Binding StartDate}"/>
+                        <DataGridTextColumn Header="Enddatum" Binding="{Binding EndDate}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </wpfui:CardExpander>
