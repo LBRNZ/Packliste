@@ -142,5 +142,45 @@ namespace Packliste.Pages
                 }
             }
         }
+
+        private void AddTraveler_Click(object sender, RoutedEventArgs e)
+        {
+            Person selectedPerson = PersonSelector_cb.SelectedItem as Person;
+            Journey selectedJourney = Journeys_dg.SelectedItem as Journey;
+            selectedJourney.Travelers.Add(new Traveler(selectedPerson));
+        }
+
+        private void RemoveTraveler_Click(object sender, RoutedEventArgs e)
+        {
+            Traveler selectedTraveler = Travelers_lb.SelectedItem as Traveler;
+            Journey selectedJourney = Journeys_dg.SelectedItem as Journey;
+            selectedJourney.Travelers.Remove(selectedTraveler);
+        }
+
+        private void Persons_dg_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            var grid = (DataGrid)sender;
+            if (Key.Delete == e.Key)
+            {
+                try
+                {
+                    Data.RemovePerson(grid.Items[grid.SelectedIndex] as Person);
+                }
+                catch (Exception ex)
+                {
+
+                    Snackbar rootSnackbar = (((MainWindow)Application.Current.MainWindow)!).RootSnackbar;
+                    rootSnackbar.Message = ex.Message;
+                    rootSnackbar.Title = "Fehler";
+                    rootSnackbar.Icon = WPFUI.Common.Icon.ErrorCircle24;
+
+                    rootSnackbar.Expand();
+                }
+                finally
+                {
+                    e.Handled = true;
+                }
+            }
+        }
     }
 }

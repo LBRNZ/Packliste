@@ -175,5 +175,15 @@ namespace Packliste.Data
             }
             Items.Remove(item);
         }
+
+        public void RemovePerson(Person person)
+        {
+            if (Journeys.Any(x => x.Travelers.Any(t => t.Person == person)))
+            {
+                string journeys = string.Join(", ", Journeys.Where(x => x.Travelers.Any(t => t.Person == person)).Select(j => j.Destination));
+                throw new InvalidOperationException("Die Person wird noch von folgenden Reisen genutzt: " + journeys);
+            }
+            Persons.Remove(person);
+        }
     }
 }

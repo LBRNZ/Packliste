@@ -63,12 +63,16 @@ namespace Packliste.Data
                         using (var itemReader = reader.ReadSubtree())
                         {
                             itemReader.ReadToFollowing("ItemSet-REF");
-                            do
+                            if (!itemReader.IsEmptyElement)
                             {
-                                var itemId = Guid.Parse(itemReader.GetAttribute("Identifier"));
-                                var item = XmlData.Items.FirstOrDefault(x => x.Identifier == itemId);
-                                traveler.itemSets.Add(new ItemSet { Count = itemReader.ReadElementContentAsInt(), Item = item });
-                            } while (itemReader.Depth > 0);
+                                do
+                                {
+                                    var itemId = Guid.Parse(itemReader.GetAttribute("Identifier"));
+                                    var item = XmlData.Items.FirstOrDefault(x => x.Identifier == itemId);
+                                    traveler.itemSets.Add(new ItemSet { Count = itemReader.ReadElementContentAsInt(), Item = item });
+                                } while (itemReader.Depth > 0);
+                            }
+
                         }
                         Travelers.Add(traveler);
                     } while(reader.ReadToNextSibling("Traveler-REF"));

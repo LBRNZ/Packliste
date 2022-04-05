@@ -72,6 +72,11 @@
                     Icon="Library24"
                     Tag="data"
                     Type="{x:Type pages:DataPage}"/>
+                    <wpfui:NavigationItem
+                    Content="Packliste"
+                    Icon="List24"
+                    Tag="packinglist"
+                    Type="{x:Type pages:PackinglistPage}"/>
                 </wpfui:NavigationStore.Items>
             </wpfui:NavigationStore>
 
@@ -97,7 +102,7 @@
                 Grid.RowSpan="2"
                 Grid.Column="1"
                 MaxWidth="600"
-                Icon="PuzzlePiece24"
+                Icon="ErrorCircle24"
                 Message=""
                 Show="False"
                 ShowCloseButton="True"

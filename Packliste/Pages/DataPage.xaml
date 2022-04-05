@@ -4,12 +4,16 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Packliste.Pages"
+      xmlns:asset="clr-namespace:Packliste.Assets"
       xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
       xmlns:wpfuiCommon="clr-namespace:WPFUI.Common;assembly=WPFUI"
       mc:Ignorable="d" 
       Style="{StaticResource UiPageScrollable}"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DataPage" x:Name="_this">
+    <Page.Resources>
+        <asset:DateOnlyConverter x:Key="DateOnlyConverter"/>
+    </Page.Resources>
 
     <Grid Margin="0,0,18,18">
         <StackPanel DataContext="{Binding ElementName=_this}">
@@ -18,8 +22,9 @@
                 Header="Gegenstände"
                 Icon="AppsAddIn24"
                 IsExpanded="True">
-                <StackPanel>
+
                     <DockPanel>
+                    <StackPanel>
                         <ListBox x:Name="Categories_lb"
                              Width="250"
                              DockPanel.Dock="Left"
@@ -33,7 +38,13 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-                        <DataGrid x:Name="Items_dg"
+                        <Menu DockPanel.Dock="Bottom" Margin="0,10" Width="{Binding ElementName=Categories_lb, Path=Width}" HorizontalAlignment="Left">
+                            <MenuItem Icon="{x:Static wpfuiCommon:Icon.Add24}" Click="AddCategory_Click"/>
+                            <MenuItem Icon="{x:Static wpfuiCommon:Icon.Delete24}" Click="RemoveCategory_Click"/>
+                            <TextBox Text="{Binding SelectedCategory.Name, UpdateSourceTrigger=PropertyChanged}" Width="140"/>
+                        </Menu>
+                    </StackPanel>
+                    <DataGrid x:Name="Items_dg"
                               AutoGenerateColumns="False"
                               ItemsSource="{Binding ItemsView, UpdateSourceTrigger=PropertyChanged}"
                               AddingNewItem="Items_dg_AddingNewItem"
@@ -44,12 +55,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </DockPanel>
-                    <Menu DockPanel.Dock="Bottom" Margin="0,10" Width="{Binding ElementName=Categories_lb, Path=Width}" HorizontalAlignment="Left">
-                        <MenuItem Icon="{x:Static wpfuiCommon:Icon.Add24}" Click="AddCategory_Click"/>
-                        <MenuItem Icon="{x:Static wpfuiCommon:Icon.Delete24}" Click="RemoveCategory_Click"/>
-                        <TextBox Text="{Binding SelectedCategory.Name, UpdateSourceTrigger=PropertyChanged}" Width="140"/>
-                    </Menu>
-                </StackPanel>
+
 
             </wpfui:CardExpander>
 
@@ -60,9 +66,10 @@
                 IsExpanded="False">
                 <DataGrid x:Name="Persons_dg"
                           AutoGenerateColumns="False"
-                          ItemsSource="{Binding Data.Persons, UpdateSourceTrigger=PropertyChanged}">
+                          ItemsSource="{Binding Data.Persons, UpdateSourceTrigger=PropertyChanged}"
+                          PreviewKeyDown="Persons_dg_PreviewKeyDown">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="200"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </wpfui:CardExpander>
@@ -72,15 +79,64 @@
                 Header="Reisen"
                 Icon="Map24"
                 IsExpanded="False">
-                <DataGrid x:Name="Journeys_dg"
-                          AutoGenerateColumns="False"
-                          ItemsSource="{Binding Data.Journeys, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Ziel" Binding="{Binding Destination}"/>
-                        <DataGridTextColumn Header="Startdatum" Binding="{Binding StartDate}"/>
-                        <DataGridTextColumn Header="Enddatum" Binding="{Binding EndDate}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="Journeys_dg"
+                            AutoGenerateColumns="False"
+                            Grid.Column="0"                              
+                            ItemsSource="{Binding Data.Journeys, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Ziel" Binding="{Binding Destination}" Width="150"/>
+                            <DataGridTemplateColumn Header="Startdatum">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DatePicker SelectedDate="{Binding StartDate, Converter={StaticResource DateOnlyConverter}}" BorderThickness="0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Enddatum">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DatePicker SelectedDate="{Binding EndDate, Converter={StaticResource DateOnlyConverter}}" BorderThickness="0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="10,0,0,0">
+                        <TextBlock Text="Reisende" Margin="0,0,0,10" FontSize="16"/>
+                        <ListBox x:Name="Travelers_lb"
+                             Width="250"
+                             MinHeight="100"
+                             ItemsSource="{Binding ElementName=Journeys_dg, Path=SelectedItem.Travelers, UpdateSourceTrigger=PropertyChanged}"
+                             SelectedIndex="0">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Person.Name}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Menu Margin="0,10,0,0" Width="{Binding ElementName=Travelers_lb, Path=Width}">
+                            <MenuItem Icon="{x:Static wpfuiCommon:Icon.Add24}" Click="AddTraveler_Click"/>
+                            <MenuItem Icon="{x:Static wpfuiCommon:Icon.Delete24}" Click="RemoveTraveler_Click"/>
+                            <ComboBox ItemsSource="{Binding Data.Persons, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedIndex="0"
+                                      Width="140"
+                                      x:Name="PersonSelector_cb">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Menu>
+                    </StackPanel>
+                </Grid>
             </wpfui:CardExpander>
         </StackPanel>
 
