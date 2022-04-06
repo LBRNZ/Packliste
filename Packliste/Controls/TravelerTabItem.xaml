@@ -5,10 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
              xmlns:local="clr-namespace:Packliste.Controls"
+             xmlns:asset="clr-namespace:Packliste.Assets"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" x:Name="_this">
     <TabItem.Resources>
         <Style TargetType="{x:Type local:TravelerTabItem}" BasedOn="{StaticResource {x:Type TabItem}}"/>
+        <asset:WeightConverter x:Key="WeightConverter"/>
     </TabItem.Resources>
     <Grid DataContext="{Binding ElementName=_this}">
         <Grid.ColumnDefinitions>
@@ -58,7 +60,11 @@
             </DataGrid>
         </StackPanel>
         <StackPanel Grid.Column="1" Margin="10,0,10,10">
-            <TextBlock Text="Packliste" Margin="0,0,0,10" FontSize="24"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <TextBlock Text="Packliste"  FontSize="24" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding Traveler.TotalWeight, Converter={StaticResource WeightConverter}}" VerticalAlignment="Center"/>
+            </StackPanel>
+            
             <ListBox ItemsSource="{Binding Traveler.itemSets}" Margin="0,0,10,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
