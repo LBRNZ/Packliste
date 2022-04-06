@@ -24,7 +24,16 @@ namespace Packliste.Controls
     public partial class TravelerTabItem : TabItem, INotifyPropertyChanged
     {
 
-
+        private ICollectionView _ItemsView;
+        public ICollectionView ItemsView
+        {
+            get { return _ItemsView; }
+            set
+            {
+                _ItemsView = value;
+                NotifyPropertyChanged();
+            }
+        }
         public Traveler Traveler
         {
             get { return (Traveler)GetValue(TravelerProperty); }
@@ -47,6 +56,9 @@ namespace Packliste.Controls
         {
             InitializeComponent();
             this.PropertyChanged += TravelerTabItem_PropertyChanged;
+            var Data = (Application.Current.MainWindow as MainWindow).data;
+            ItemsView = new CollectionViewSource { Source = Data.Items }.View;
+            ItemsView.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
         }
 
         private void TravelerTabItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -55,6 +67,30 @@ namespace Packliste.Controls
             {
                 Header = Traveler.Person.Name;
             }
+        }
+
+        private void Resources_dg_Row_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Item selectedItem = ((DataGridRow)sender).Item as Item;
+            Traveler.itemSets.Add(new ItemSet()
+            {
+                Item = selectedItem,
+                Count = 1
+            });
+        }
+
+        private void DeleteItemSet_Click(object sender, RoutedEventArgs e)
+        {
+            ItemSet selectedItemSet =  GetAncestorOfType<ListBoxItem>(sender as Button).Content as ItemSet;
+            Traveler.itemSets.Remove(selectedItemSet);
+        }
+
+        public T GetAncestorOfType<T>(FrameworkElement child) where T : FrameworkElement
+        {
+            var parent = VisualTreeHelper.GetParent(child);
+            if (parent != null && !(parent is T))
+                return (T)GetAncestorOfType<T>((FrameworkElement)parent);
+            return (T)parent;
         }
     }
 }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
              xmlns:local="clr-namespace:Packliste.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" x:Name="_this">
@@ -10,6 +11,67 @@
         <Style TargetType="{x:Type local:TravelerTabItem}" BasedOn="{StaticResource {x:Type TabItem}}"/>
     </TabItem.Resources>
     <Grid DataContext="{Binding ElementName=_this}">
-        <DataGrid ItemsSource="{Binding Traveler.itemSets}"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.4*"/>
+            <ColumnDefinition Width="0.6*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="10,0,10,10">
+            <TextBlock Text="Bestand" Margin="0,0,0,10" FontSize="24"/>
+            <TextBlock Text="Doppelt klicken um Gegenstände zur Packliste hinzuzufügen" Margin="0,0,0,10" TextWrapping="Wrap"/>
+            <DataGrid ItemsSource="{Binding ItemsView}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  Margin="0,0,10,0">
+                <DataGrid.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="{x:Type GroupItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type GroupItem}">
+                                            <Expander IsExpanded="True">
+                                                <Expander.Header>
+                                                    <DockPanel>
+                                                        <TextBlock FontWeight="Bold" Text="{Binding Path=Items[0].Category.Name}"/>
+                                                    </DockPanel>
+                                                </Expander.Header>
+                                                <Expander.Content>
+                                                    <ItemsPresenter />
+                                                </Expander.Content>
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </DataGrid.GroupStyle>
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <EventSetter Event="MouseDoubleClick" Handler="Resources_dg_Row_DoubleClick"/>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="Gewicht [g]" Binding="{Binding Weight}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="10,0,10,10">
+            <TextBlock Text="Packliste" Margin="0,0,0,10" FontSize="24"/>
+            <ListBox ItemsSource="{Binding Traveler.itemSets}" Margin="0,0,10,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Item.Name}" VerticalAlignment="Center" Margin="0,0,10,0" MinWidth="100"/>
+                            <wpfui:NumberBox Text="{Binding Count}"/>
+                            <Button Click="DeleteItemSet_Click" Margin="10,0,0,0">
+                                <wpfui:Icon Glyph="Delete20"/>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
     </Grid>
 </TabItem>

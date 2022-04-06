@@ -35,6 +35,7 @@ namespace Packliste.Pages
                 NotifyPropertyChanged();
             }
         }
+
         public PackinglistPage()
         {
             InitializeComponent();
