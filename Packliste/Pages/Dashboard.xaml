@@ -3,12 +3,59 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
       xmlns:local="clr-namespace:Packliste.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Dashboard">
+      Style="{StaticResource UiPageScrollable}"
+      Title="Dashboard" x:Name="_this">
 
-    <Grid>
-        
+    <Grid Margin="50,0,20,0" DataContext="{Binding ElementName=_this}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <wpfui:Icon FontSize="30" Glyph="ArrowTrendingLines24" />
+            <StackPanel Margin="10">
+                <TextBlock Text="{Binding Data.Items.Count}"
+                           FontSize="16"
+                           FontWeight="Medium"/>
+                <TextBlock Text="Gegenstände wurden bereits angelegt"
+                           Foreground="{DynamicResource TextFillColorTertiaryBrush}"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <wpfui:CardAction
+                    Margin="0,0,0,8"
+                    Click="ActionCardData_Click"
+                    Icon="Library20">
+                <StackPanel>
+                    <TextBlock
+                            Margin="0,0,0,4"
+                            FontWeight="Medium"
+                            Text="Daten" />
+                    <TextBlock
+                            FontSize="11"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="Stammdatenverwaltung für Gegenstände, Personen und Reisen" />
+                </StackPanel>
+            </wpfui:CardAction>
+            <wpfui:CardAction
+                    Margin="0,0,0,8"
+                    Click="ActionCardPacklist_Click"
+                    Icon="List20">
+                <StackPanel>
+                    <TextBlock
+                            Margin="0,0,0,4"
+                            FontWeight="Medium"
+                            Text="Packliste" />
+                    <TextBlock
+                            FontSize="11"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="Alle Packlisten zu den erstellten Reisen" />
+                </StackPanel>
+            </wpfui:CardAction>
+        </StackPanel>
     </Grid>
 </Page>

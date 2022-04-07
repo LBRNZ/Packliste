@@ -27,7 +27,7 @@ namespace Packliste.Pages
     {
         private Category _selectedCategory;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        
 
         private ICollectionView _ItemsView;
 
@@ -80,6 +80,7 @@ namespace Packliste.Pages
             }
         }
 
+        public event PropertyChangedEventHandler? PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

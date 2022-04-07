@@ -71,7 +71,7 @@
                     Content="Daten"
                     Icon="Library24"
                     Tag="data"
-                    Type="{x:Type pages:DataPage}"/>
+                    Type="{x:Type pages:DataPage}" Cursor="Hand"/>
                     <wpfui:NavigationItem
                     Content="Packliste"
                     Icon="List24"

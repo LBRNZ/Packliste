@@ -13,6 +13,7 @@
       Title="DataPage" x:Name="_this">
     <Page.Resources>
         <asset:DateOnlyConverter x:Key="DateOnlyConverter"/>
+        <asset:ValueToBoolConverter x:Key="ValueToBoolConverter"/>
     </Page.Resources>
 
     <Grid Margin="0,0,18,18">
@@ -123,7 +124,8 @@
                         </ListBox>
                         <Menu Margin="0,10,0,0" Width="{Binding ElementName=Travelers_lb, Path=Width}">
                             <MenuItem Icon="{x:Static wpfuiCommon:Icon.Add24}" Click="AddTraveler_Click"/>
-                            <MenuItem Icon="{x:Static wpfuiCommon:Icon.Delete24}" Click="RemoveTraveler_Click"/>
+                            <MenuItem Icon="{x:Static wpfuiCommon:Icon.Delete24}" Click="RemoveTraveler_Click"
+                                      IsEnabled="{Binding ElementName=Travelers_lb, Path=SelectedItem, Converter={StaticResource ValueToBoolConverter}}"/>
                             <ComboBox ItemsSource="{Binding Data.Persons, UpdateSourceTrigger=PropertyChanged}"
                                       SelectedIndex="0"
                                       Width="140"

@@ -17,9 +17,11 @@
             <ColumnDefinition Width="0.4*"/>
             <ColumnDefinition Width="0.6*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Margin="10,0,10,10">
-            <TextBlock Text="Bestand" Margin="0,0,0,10" FontSize="24"/>
-            <TextBlock Text="Doppelt klicken um Gegenstände zur Packliste hinzuzufügen" Margin="0,0,0,10" TextWrapping="Wrap"/>
+        <DockPanel Margin="10,0,10,10">
+            <StackPanel DockPanel.Dock="Top">
+                <TextBlock Text="Bestand" Margin="0,0,0,10" FontSize="24"/>
+                <TextBlock Text="Doppelt klicken um Gegenstände zur Packliste hinzuzufügen" Margin="0,0,0,10" TextWrapping="Wrap"/>
+            </StackPanel>
             <DataGrid ItemsSource="{Binding ItemsView}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
@@ -58,26 +60,28 @@
                     <DataGridTextColumn Header="Gewicht [g]" Binding="{Binding Weight}"/>
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
-        <StackPanel Grid.Column="1" Margin="10,0,10,10">
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="Packliste"  FontSize="24" Margin="0,0,10,0"/>
-                <TextBlock Text="{Binding Traveler.TotalWeight, Converter={StaticResource WeightConverter}}" VerticalAlignment="Center"/>
+        </DockPanel>
+        <DockPanel Grid.Column="1" Margin="10,0,10,10">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" DockPanel.Dock="Top">
+                <TextBlock Text="Packliste - Gesamtgewicht:"  FontSize="24" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding Traveler.TotalWeight, Converter={StaticResource WeightConverter}}" VerticalAlignment="Center" FontSize="24"/>
             </StackPanel>
             
             <ListBox ItemsSource="{Binding Traveler.itemSets}" Margin="0,0,10,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Item.Name}" VerticalAlignment="Center" Margin="0,0,10,0" MinWidth="100"/>
-                            <wpfui:NumberBox Text="{Binding Count}"/>
-                            <Button Click="DeleteItemSet_Click" Margin="10,0,0,0">
-                                <wpfui:Icon Glyph="Delete20"/>
-                            </Button>
+                            <TextBlock Text="{Binding Item.Name}" VerticalAlignment="Center" Margin="0,0,10,0" MinWidth="200"/>
+                            <wpfui:NumberBox Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}" MinWidth="70"/>
+                            <wpfui:Button Click="DeleteItemSet_Click"
+                                          Margin="10,0,0,0"
+                                          Icon="Delete20"
+                                          Appearance="Danger"/>
+
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        </StackPanel>
+        </DockPanel>
     </Grid>
 </TabItem>
