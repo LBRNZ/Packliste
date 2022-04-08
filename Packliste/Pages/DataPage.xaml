@@ -41,8 +41,12 @@
                         </ListBox>
                         <Menu DockPanel.Dock="Bottom" Margin="0,10" Width="{Binding ElementName=Categories_lb, Path=Width}" HorizontalAlignment="Left">
                             <MenuItem Icon="{x:Static wpfuiCommon:Icon.Add24}" Click="AddCategory_Click"/>
-                            <MenuItem Icon="{x:Static wpfuiCommon:Icon.Delete24}" Click="RemoveCategory_Click"/>
-                            <TextBox Text="{Binding SelectedCategory.Name, UpdateSourceTrigger=PropertyChanged}" Width="140"/>
+                            <MenuItem Icon="{x:Static wpfuiCommon:Icon.Delete24}"
+                                      Click="RemoveCategory_Click"
+                                      IsEnabled="{Binding ElementName=Categories_lb, Path=SelectedItem, Converter={StaticResource ValueToBoolConverter}}"/>
+                            <TextBox Text="{Binding SelectedCategory.Name, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="140"
+                                     IsEnabled="{Binding ElementName=Categories_lb, Path=SelectedItem, Converter={StaticResource ValueToBoolConverter}}"/>
                         </Menu>
                     </StackPanel>
                     <DataGrid x:Name="Items_dg"
@@ -88,7 +92,8 @@
                     <DataGrid x:Name="Journeys_dg"
                             AutoGenerateColumns="False"
                             Grid.Column="0"                              
-                            ItemsSource="{Binding Data.Journeys, UpdateSourceTrigger=PropertyChanged}">
+                            ItemsSource="{Binding Data.Journeys, UpdateSourceTrigger=PropertyChanged}"
+                            AddingNewItem="Journeys_dg_AddingNewItem">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Ziel" Binding="{Binding Destination}" Width="150"/>
                             <DataGridTemplateColumn Header="Startdatum">

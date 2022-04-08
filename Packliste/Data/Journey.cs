@@ -20,6 +20,8 @@ namespace Packliste.Data
         public Journey(XmlData xmlData) : base(xmlData)
         {
             Travelers = new ObservableCollection<Traveler>();
+            StartDate = DateOnly.FromDateTime(DateTime.Today);
+            EndDate = DateOnly.FromDateTime(DateTime.Today.AddDays(1));
         }
 
         public Journey()

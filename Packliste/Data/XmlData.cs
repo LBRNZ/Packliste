@@ -61,15 +61,23 @@ namespace Packliste.Data
                 using (var innerReader = reader.ReadSubtree())
                 {
                     innerReader.ReadToFollowing("Person");
-                    do
+                    if (innerReader.NodeType is XmlNodeType.Element)
                     {
-                        Person person = (Person)childSerializer.Deserialize(innerReader);
-                        person.SetXmlData(this);
-                        Persons.Add(person);
-                    } while (innerReader.Depth > 0);
+                        do
+                        {
+                            Person person = (Person)childSerializer.Deserialize(innerReader);
+                            person.SetXmlData(this);
+                            Persons.Add(person);
+                        } while (innerReader.Depth > 0);
+                    }
+
                 }
             }
-            reader.ReadEndElement();
+            if (reader.NodeType is XmlNodeType.EndElement)
+            {
+                reader.ReadEndElement();
+            }
+
 
             childSerializer = new XmlSerializer(typeof(Category));
             if (reader.Name == "Categories" && reader.IsStartElement())
@@ -77,15 +85,21 @@ namespace Packliste.Data
                 using (var innerReader = reader.ReadSubtree())
                 {
                     innerReader.ReadToFollowing("Category");
-                    do
+                    if (innerReader.NodeType is XmlNodeType.Element)
                     {
-                        Category category = (Category)childSerializer.Deserialize(innerReader);
-                        category.SetXmlData(this);
-                        Categories.Add(category);
-                    } while (innerReader.Depth > 0);
+                        do
+                        {
+                            Category category = (Category)childSerializer.Deserialize(innerReader);
+                            category.SetXmlData(this);
+                            Categories.Add(category);
+                        } while (innerReader.Depth > 0);
+                    }
                 }
             }
-            reader.ReadEndElement();
+            if (reader.NodeType is XmlNodeType.EndElement)
+            {
+                reader.ReadEndElement();
+            }
 
             childSerializer = new XmlSerializer(typeof(Item));
             if (reader.Name == "Items" && reader.IsStartElement())
@@ -93,27 +107,36 @@ namespace Packliste.Data
                 using (var innerReader = reader.ReadSubtree())
                 {
                     innerReader.ReadToFollowing("Item");
-                    do
+                    if (innerReader.NodeType is XmlNodeType.Element)
                     {
-                        Item item = new Item(this);
-                        item.ReadXml(innerReader);
-                        Items.Add(item);
-                    } while (innerReader.ReadToNextSibling("Item"));
+                        do
+                        {
+                            Item item = new Item(this);
+                            item.ReadXml(innerReader);
+                            Items.Add(item);
+                        } while (innerReader.ReadToNextSibling("Item"));
+                    }
                 }
             }
-            reader.ReadEndElement();
+            if (reader.NodeType is XmlNodeType.EndElement)
+            {
+                reader.ReadEndElement();
+            }
 
             if (reader.Name == "Journeys" && reader.IsStartElement())
             {
                 using (var innerReader = reader.ReadSubtree())
                 {
                     innerReader.ReadToFollowing("Journey");
-                    do
+                    if (innerReader.NodeType is XmlNodeType.Element)
                     {
-                        Journey journey = new Journey(this);
-                        journey.ReadXml(innerReader);
-                        Journeys.Add(journey);
-                    } while (innerReader.ReadToNextSibling("Journey"));
+                        do
+                        {
+                            Journey journey = new Journey(this);
+                            journey.ReadXml(innerReader);
+                            Journeys.Add(journey);
+                        } while (innerReader.ReadToNextSibling("Journey"));
+                    }
                 }
             }
         }

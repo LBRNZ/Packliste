@@ -148,7 +148,7 @@ namespace Packliste.Pages
         {
             Person selectedPerson = PersonSelector_cb.SelectedItem as Person;
             Journey selectedJourney = Journeys_dg.SelectedItem as Journey;
-            selectedJourney.Travelers.Add(new Traveler(selectedPerson));
+            selectedJourney?.Travelers.Add(new Traveler(selectedPerson));
         }
 
         private void RemoveTraveler_Click(object sender, RoutedEventArgs e)
@@ -182,6 +182,11 @@ namespace Packliste.Pages
                     e.Handled = true;
                 }
             }
+        }
+
+        private void Journeys_dg_AddingNewItem(object sender, AddingNewItemEventArgs e)
+        {
+            e.NewItem = new Journey(Data);
         }
     }
 }
