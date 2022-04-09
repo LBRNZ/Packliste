@@ -6,11 +6,17 @@
              xmlns:wpfui="clr-namespace:WPFUI.Controls;assembly=WPFUI"
              xmlns:local="clr-namespace:Packliste.Controls"
              xmlns:asset="clr-namespace:Packliste.Assets"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" x:Name="_this">
     <TabItem.Resources>
         <Style TargetType="{x:Type local:TravelerTabItem}" BasedOn="{StaticResource {x:Type TabItem}}"/>
         <asset:WeightConverter x:Key="WeightConverter"/>
+        <CollectionViewSource x:Key="ItemSetsCS" Source="{Binding ElementName=_this, Path=Traveler.itemSets}" >
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Item.Name" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </TabItem.Resources>
     <Grid DataContext="{Binding ElementName=_this}">
         <Grid.ColumnDefinitions>
@@ -66,8 +72,8 @@
                 <TextBlock Text="Packliste - Gesamtgewicht:"  FontSize="24" Margin="0,0,10,0"/>
                 <TextBlock Text="{Binding Traveler.TotalWeight, Converter={StaticResource WeightConverter}}" VerticalAlignment="Center" FontSize="24"/>
             </StackPanel>
-            
-            <ListBox ItemsSource="{Binding Traveler.itemSets}" Margin="0,0,10,0">
+
+            <ListBox ItemsSource="{Binding Source={StaticResource ItemSetsCS}}" Margin="0,0,10,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">

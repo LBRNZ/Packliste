@@ -48,6 +48,7 @@ namespace Packliste.Controls
             DependencyProperty.Register("Traveler", typeof(Traveler), typeof(TravelerTabItem));
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -72,11 +73,18 @@ namespace Packliste.Controls
         private void Resources_dg_Row_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             Item selectedItem = ((DataGridRow)sender).Item as Item;
-            Traveler.itemSets.Add(new ItemSet()
+            if (Traveler.itemSets.Any(x => x.Item == selectedItem))
             {
-                Item = selectedItem,
-                Count = 1
-            });
+                Traveler.itemSets.First(x => x.Item == selectedItem).Count++;
+            } else
+            {
+                Traveler.itemSets.Add(new ItemSet()
+                {
+                    Item = selectedItem,
+                    Count = 1
+                });
+            }
+
         }
 
         private void DeleteItemSet_Click(object sender, RoutedEventArgs e)
