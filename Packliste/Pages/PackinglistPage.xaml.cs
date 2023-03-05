@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Packliste.Helper;
 
 namespace Packliste.Pages
 {
@@ -36,6 +37,8 @@ namespace Packliste.Pages
             }
         }
 
+        private Journey _currentJourney;
+
         public PackinglistPage()
         {
             InitializeComponent();
@@ -51,10 +54,10 @@ namespace Packliste.Pages
         private void JourneySelector_cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PersonsTabControl.Items.Clear();
-            Journey journey = ((ComboBox)sender).SelectedItem as Journey;
-            if (journey != null)
+            _currentJourney = ((ComboBox)sender).SelectedItem as Journey;
+            if (_currentJourney != null)
             {
-                foreach (Traveler traveler in journey.Travelers)
+                foreach (Traveler traveler in _currentJourney.Travelers)
                 {
                     TravelerTabItem tabItem = new TravelerTabItem()
                     {
@@ -64,6 +67,11 @@ namespace Packliste.Pages
                 }
             }
 
+        }
+
+        private void SavePdf_Click(object sender, RoutedEventArgs e)
+        {
+            new PdfCreator(_currentJourney);
         }
     }
 }

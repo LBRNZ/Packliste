@@ -135,6 +135,7 @@ namespace Packliste.Data
                             Journey journey = new Journey(this);
                             journey.ReadXml(innerReader);
                             Journeys.Add(journey);
+                            reader.ReadEndElement();
                         } while (innerReader.ReadToNextSibling("Journey"));
                     }
                 }
