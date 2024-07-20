@@ -62,7 +62,7 @@ namespace Packliste.Helper
                 string totalWeight = weightConverter.Convert(traveler.TotalWeight, null, null, CultureInfo.CurrentCulture).ToString();
                 doc.Add(new iTextSharp.text.Paragraph(traveler.Person.Name + " - " + totalWeight, times));
                 doc.Add(new iTextSharp.text.Paragraph("\n"));
-                PdfPTable table = createItemTable(traveler);
+                PdfPTable table = CreateItemTable(traveler);
                 doc.Add(table);
             }
 
@@ -70,21 +70,23 @@ namespace Packliste.Helper
 
         }
 
-        private PdfPTable createItemTable(Traveler traveler)
+        private static PdfPTable CreateItemTable(Traveler traveler)
         {
-            float[] relativeWidths = { 0.15f, 0.75F, 0.1F };
+            float[] relativeWidths = { 0.15f, 0.55F, 0.2F, 0.1F };
             PdfPTable itemsTable = new PdfPTable(relativeWidths);
             itemsTable.HorizontalAlignment = Element.ALIGN_LEFT;
             itemsTable.DefaultCell.Border = 3;
-            itemsTable.WidthPercentage = 80;
+            itemsTable.WidthPercentage = 90;
             itemsTable.AddCell("Gepackt");
             itemsTable.AddCell("Gegenstand");
+            itemsTable.AddCell("Einzelgewicht [g]");
             itemsTable.AddCell("Menge");
             itemsTable.HeaderRows = 1;
             foreach (var itemSet in traveler.itemSets)
             {
                 itemsTable.AddCell("");
                 itemsTable.AddCell(itemSet.Item.Name);
+                itemsTable.AddCell(itemSet.Item.Weight.ToString());
                 itemsTable.AddCell(itemSet.Count.ToString());
             }
             return itemsTable;
